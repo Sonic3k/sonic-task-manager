@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
+import java.util.NoSuchElementException;
 
 @RestController
 @RequestMapping("/api/tasks")
@@ -27,9 +27,6 @@ public class TaskController {
         this.taskService = taskService;
     }
 
-    /**
-     * Get all active tasks
-     */
     @GetMapping
     public TaskListResponse getAllTasks() {
         List<Task> tasks = taskService.getAllActiveTasks();
@@ -43,138 +40,95 @@ public class TaskController {
         return response;
     }
 
-    /**
-     * Get task by ID
-     */
     @GetMapping("/{id}")
-    public ResponseEntity<BaseResponse> getTaskById(@PathVariable("id") Long id) {
-        Optional<Task> task = taskService.getTaskById(id);
+    public TaskResponse getTaskById(@PathVariable("id") Long id) {
+        Task task = taskService.getTaskById(id)
+                .orElseThrow(() -> new NoSuchElementException("Task with ID " + id + " not found"));
         
-        if (task.isPresent()) {
-            TaskDto taskDto = taskService.convertToDto(task.get());
-            TaskResponse response = new TaskResponse();
-            response.setSuccess(true);
-            response.setTask(taskDto);
-            return ResponseEntity.ok(response);
-        } else {
-            BaseResponse response = new BaseResponse();
-            response.setSuccess(false);
-            response.setError("Task not found");
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
-        }
+        TaskDto taskDto = taskService.convertToDto(task);
+        TaskResponse response = new TaskResponse();
+        response.setSuccess(true);
+        response.setTask(taskDto);
+        return response;
     }
 
-    /**
-     * Create new task
-     */
     @PostMapping
-    public ResponseEntity<BaseResponse> createTask(@Valid @RequestBody CreateTaskRequest request) {
-        try {
-            Task createdTask = taskService.createTask(request);
-            TaskDto taskDto = taskService.convertToDto(createdTask);
-            
-            TaskResponse response = new TaskResponse();
-            response.setSuccess(true);
-            response.setMessage("Task created successfully");
-            response.setTask(taskDto);
-            return ResponseEntity.status(HttpStatus.CREATED).body(response);
-            
-        } catch (Exception e) {
-            BaseResponse response = new BaseResponse();
-            response.setSuccess(false);
-            response.setError("Failed to create task");
-            response.setMessage(e.getMessage());
-            return ResponseEntity.badRequest().body(response);
-        }
+    public ResponseEntity<TaskResponse> createTask(@Valid @RequestBody CreateTaskRequest request) {
+        Task createdTask = taskService.createTask(request);
+        TaskDto taskDto = taskService.convertToDto(createdTask);
+        
+        TaskResponse response = new TaskResponse();
+        response.setSuccess(true);
+        response.setMessage("Task created successfully");
+        response.setTask(taskDto);
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
-    /**
-     * Update existing task
-     */
     @PutMapping("/{id}")
-    public ResponseEntity<BaseResponse> updateTask(@PathVariable("id") Long id, 
-                                                   @Valid @RequestBody CreateTaskRequest request) {
-        Optional<Task> updatedTask = taskService.updateTask(id, request);
+    public TaskResponse updateTask(@PathVariable("id") Long id, 
+                                   @Valid @RequestBody CreateTaskRequest request) {
+        Task updatedTask = taskService.updateTask(id, request)
+                .orElseThrow(() -> new NoSuchElementException("Task with ID " + id + " not found"));
         
-        if (updatedTask.isPresent()) {
-            TaskDto taskDto = taskService.convertToDto(updatedTask.get());
-            TaskResponse response = new TaskResponse();
-            response.setSuccess(true);
-            response.setMessage("Task updated successfully");
-            response.setTask(taskDto);
-            return ResponseEntity.ok(response);
-        } else {
-            BaseResponse response = new BaseResponse();
-            response.setSuccess(false);
-            response.setError("Task not found");
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
-        }
+        TaskDto taskDto = taskService.convertToDto(updatedTask);
+        TaskResponse response = new TaskResponse();
+        response.setSuccess(true);
+        response.setMessage("Task updated successfully");
+        response.setTask(taskDto);
+        return response;
     }
 
-    /**
-     * Delete task
-     */
     @DeleteMapping("/{id}")
-    public ResponseEntity<BaseResponse> deleteTask(@PathVariable("id") Long id) {
+    public BaseResponse deleteTask(@PathVariable("id") Long id) {
         boolean deleted = taskService.deleteTask(id);
+        if (!deleted) {
+            throw new NoSuchElementException("Task with ID " + id + " not found");
+        }
         
         BaseResponse response = new BaseResponse();
-        if (deleted) {
-            response.setSuccess(true);
-            response.setMessage("Task deleted successfully");
-            return ResponseEntity.ok(response);
-        } else {
-            response.setSuccess(false);
-            response.setError("Task not found");
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
-        }
+        response.setSuccess(true);
+        response.setMessage("Task deleted successfully");
+        return response;
     }
 
-    /**
-     * Mark task as completed
-     */
     @PutMapping("/{id}/complete")
-    public ResponseEntity<BaseResponse> completeTask(@PathVariable("id") Long id) {
+    public BaseResponse completeTask(@PathVariable("id") Long id) {
         boolean completed = taskService.completeTask(id);
+        if (!completed) {
+            throw new NoSuchElementException("Task with ID " + id + " not found");
+        }
         
         BaseResponse response = new BaseResponse();
-        if (completed) {
-            response.setSuccess(true);
-            response.setMessage("Task completed successfully");
-            return ResponseEntity.ok(response);
-        } else {
-            response.setSuccess(false);
-            response.setError("Task not found");
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
-        }
+        response.setSuccess(true);
+        response.setMessage("Task completed successfully");
+        return response;
     }
 
-    /**
-     * Snooze task
-     */
     @PutMapping("/{id}/snooze")
-    public ResponseEntity<BaseResponse> snoozeTask(@PathVariable("id") Long id, 
-                                                   @RequestParam(required = false, defaultValue = "1") int days) {
+    public BaseResponse snoozeTask(@PathVariable("id") Long id, 
+                                   @RequestParam(name = "days", required = false, defaultValue = "1") int days) {
+        if (days <= 0) {
+            throw new IllegalArgumentException("Days must be greater than 0");
+        }
+        
         LocalDateTime snoozeUntil = LocalDateTime.now().plusDays(days);
         boolean snoozed = taskService.snoozeTask(id, snoozeUntil);
+        if (!snoozed) {
+            throw new NoSuchElementException("Task with ID " + id + " not found");
+        }
         
         BaseResponse response = new BaseResponse();
-        if (snoozed) {
-            response.setSuccess(true);
-            response.setMessage("Task snoozed for " + days + " day(s)");
-            return ResponseEntity.ok(response);
-        } else {
-            response.setSuccess(false);
-            response.setError("Task not found");
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
-        }
+        response.setSuccess(true);
+        response.setMessage("Task snoozed for " + days + " day(s)");
+        return response;
     }
 
-    /**
-     * Get subtasks for a parent task
-     */
     @GetMapping("/{id}/subtasks")
     public TaskListResponse getSubtasks(@PathVariable("id") Long id) {
+        // Verify parent task exists first
+        taskService.getTaskById(id)
+                .orElseThrow(() -> new NoSuchElementException("Parent task with ID " + id + " not found"));
+        
         List<Task> subtasks = taskService.getSubtasks(id);
         List<TaskDto> subtaskDtos = subtasks.stream()
                 .map(taskService::convertToDto)
@@ -186,9 +140,6 @@ public class TaskController {
         return response;
     }
 
-    /**
-     * Get quick win tasks
-     */
     @GetMapping("/quick-wins")
     public TaskListResponse getQuickWins() {
         List<Task> quickWins = taskService.findQuickWinTasks();
@@ -202,79 +153,40 @@ public class TaskController {
         return response;
     }
 
-    /**
-     * Create subtask for a parent task
-     */
     @PostMapping("/{parentId}/subtasks")
-    public ResponseEntity<BaseResponse> createSubtask(@PathVariable("parentId") Long parentId,
+    public ResponseEntity<TaskResponse> createSubtask(@PathVariable("parentId") Long parentId,
                                                       @Valid @RequestBody CreateTaskRequest request) {
-        // Set the parent ID
-        request.setParentId(parentId);
+        // Verify parent task exists
+        taskService.getTaskById(parentId)
+                .orElseThrow(() -> new NoSuchElementException("Parent task with ID " + parentId + " not found"));
         
-        try {
-            Task createdSubtask = taskService.createTask(request);
-            TaskDto taskDto = taskService.convertToDto(createdSubtask);
-            
-            TaskResponse response = new TaskResponse();
-            response.setSuccess(true);
-            response.setMessage("Subtask created successfully");
-            response.setTask(taskDto);
-            return ResponseEntity.status(HttpStatus.CREATED).body(response);
-            
-        } catch (Exception e) {
-            BaseResponse response = new BaseResponse();
-            response.setSuccess(false);
-            response.setError("Failed to create subtask");
-            response.setMessage(e.getMessage());
-            return ResponseEntity.badRequest().body(response);
-        }
+        request.setParentId(parentId);
+        Task createdSubtask = taskService.createTask(request);
+        TaskDto taskDto = taskService.convertToDto(createdSubtask);
+        
+        TaskResponse response = new TaskResponse();
+        response.setSuccess(true);
+        response.setMessage("Subtask created successfully");
+        response.setTask(taskDto);
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
-    /**
-     * Complete multiple tasks at once
-     */
     @PutMapping("/complete-multiple")
-    public ResponseEntity<BaseResponse> completeMultipleTasks(@RequestBody List<Long> taskIds) {
-        try {
-            int completedCount = 0;
-            for (Long taskId : taskIds) {
-                if (taskService.completeTask(taskId)) {
-                    completedCount++;
-                }
-            }
-            
-            BaseResponse response = new BaseResponse();
-            response.setSuccess(true);
-            response.setMessage("Completed " + completedCount + " out of " + taskIds.size() + " tasks");
-            return ResponseEntity.ok(response);
-            
-        } catch (Exception e) {
-            BaseResponse response = new BaseResponse();
-            response.setSuccess(false);
-            response.setError("Failed to complete tasks");
-            response.setMessage(e.getMessage());
-            return ResponseEntity.badRequest().body(response);
+    public BaseResponse completeMultipleTasks(@RequestBody List<Long> taskIds) {
+        if (taskIds == null || taskIds.isEmpty()) {
+            throw new IllegalArgumentException("Task IDs list cannot be empty");
         }
-    }
-
-    /**
-     * Error handling
-     */
-    @ExceptionHandler(IllegalArgumentException.class)
-    public ResponseEntity<BaseResponse> handleIllegalArgument(IllegalArgumentException e) {
+        
+        int completedCount = 0;
+        for (Long taskId : taskIds) {
+            if (taskService.completeTask(taskId)) {
+                completedCount++;
+            }
+        }
+        
         BaseResponse response = new BaseResponse();
-        response.setSuccess(false);
-        response.setError("Invalid request");
-        response.setMessage(e.getMessage());
-        return ResponseEntity.badRequest().body(response);
-    }
-
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity<BaseResponse> handleGenericException(Exception e) {
-        BaseResponse response = new BaseResponse();
-        response.setSuccess(false);
-        response.setError("Internal server error");
-        response.setMessage("An unexpected error occurred");
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+        response.setSuccess(true);
+        response.setMessage("Completed " + completedCount + " out of " + taskIds.size() + " tasks");
+        return response;
     }
 }

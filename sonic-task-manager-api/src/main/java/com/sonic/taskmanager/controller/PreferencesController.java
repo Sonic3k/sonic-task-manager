@@ -1,8 +1,8 @@
 package com.sonic.taskmanager.controller;
 
 import java.util.Map;
+import java.util.NoSuchElementException;
 
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -29,9 +29,6 @@ public class PreferencesController {
         this.preferencesService = preferencesService;
     }
 
-    /**
-     * Get all preferences
-     */
     @GetMapping
     public PreferencesResponse getAllPreferences() {
         Map<String, String> preferences = preferencesService.getAllPreferences();
@@ -42,137 +39,88 @@ public class PreferencesController {
         return response;
     }
 
-    /**
-     * Get specific preference by key
-     */
     @GetMapping("/{key}")
-    public ResponseEntity<BaseResponse> getPreference(@PathVariable("key") String key) {
+    public PreferenceValueResponse getPreference(@PathVariable("key") String key) {
         String value = preferencesService.getPreferenceWithDefault(key);
         
-        if (value != null) {
-            PreferenceValueResponse response = new PreferenceValueResponse();
-            response.setSuccess(true);
-            response.setKey(key);
-            response.setValue(value);
-            return ResponseEntity.ok(response);
-        } else {
-            BaseResponse response = new BaseResponse();
-            response.setSuccess(false);
-            response.setError("Preference not found");
-            return ResponseEntity.notFound().build();
+        if (value == null) {
+            throw new NoSuchElementException("Preference with key '" + key + "' not found");
         }
+        
+        PreferenceValueResponse response = new PreferenceValueResponse();
+        response.setSuccess(true);
+        response.setKey(key);
+        response.setValue(value);
+        return response;
     }
 
-    /**
-     * Set specific preference
-     */
     @PutMapping("/{key}")
-    public ResponseEntity<BaseResponse> setPreference(@PathVariable("key") String key, 
-                                                     @RequestBody String value) {
-        try {
-            preferencesService.setPreference(key, value);
-            
-            BaseResponse response = new BaseResponse();
-            response.setSuccess(true);
-            response.setMessage("Preference updated successfully");
-            return ResponseEntity.ok(response);
-            
-        } catch (Exception e) {
-            BaseResponse response = new BaseResponse();
-            response.setSuccess(false);
-            response.setError("Failed to update preference");
-            response.setMessage(e.getMessage());
-            return ResponseEntity.badRequest().body(response);
+    public BaseResponse setPreference(@PathVariable("key") String key, 
+                                     @RequestBody String value) {
+        if (key == null || key.trim().isEmpty()) {
+            throw new IllegalArgumentException("Preference key cannot be empty");
         }
-    }
-
-    /**
-     * Set multiple preferences at once
-     */
-    @PutMapping
-    public ResponseEntity<BaseResponse> setPreferences(@RequestBody Map<String, String> preferences) {
-        try {
-            preferencesService.setPreferences(preferences);
-            
-            BaseResponse response = new BaseResponse();
-            response.setSuccess(true);
-            response.setMessage("Preferences updated successfully");
-            return ResponseEntity.ok(response);
-            
-        } catch (Exception e) {
-            BaseResponse response = new BaseResponse();
-            response.setSuccess(false);
-            response.setError("Failed to update preferences");
-            response.setMessage(e.getMessage());
-            return ResponseEntity.badRequest().body(response);
+        if (value == null) {
+            throw new IllegalArgumentException("Preference value cannot be null");
         }
-    }
-
-    /**
-     * Delete preference
-     */
-    @DeleteMapping("/{key}")
-    public ResponseEntity<BaseResponse> deletePreference(@PathVariable("key") String key) {
-        boolean deleted = preferencesService.deletePreference(key);
+        
+        preferencesService.setPreference(key, value);
         
         BaseResponse response = new BaseResponse();
-        if (deleted) {
-            response.setSuccess(true);
-            response.setMessage("Preference deleted successfully");
-            return ResponseEntity.ok(response);
-        } else {
-            response.setSuccess(false);
-            response.setError("Preference not found");
-            return ResponseEntity.notFound().build();
-        }
+        response.setSuccess(true);
+        response.setMessage("Preference updated successfully");
+        return response;
     }
 
-    /**
-     * Reset all preferences to defaults
-     */
+    @PutMapping
+    public BaseResponse setPreferences(@RequestBody Map<String, String> preferences) {
+        if (preferences == null || preferences.isEmpty()) {
+            throw new IllegalArgumentException("Preferences map cannot be empty");
+        }
+        
+        preferencesService.setPreferences(preferences);
+        
+        BaseResponse response = new BaseResponse();
+        response.setSuccess(true);
+        response.setMessage("Preferences updated successfully");
+        return response;
+    }
+
+    @DeleteMapping("/{key}")
+    public BaseResponse deletePreference(@PathVariable("key") String key) {
+        boolean deleted = preferencesService.deletePreference(key);
+        
+        if (!deleted) {
+            throw new NoSuchElementException("Preference with key '" + key + "' not found");
+        }
+        
+        BaseResponse response = new BaseResponse();
+        response.setSuccess(true);
+        response.setMessage("Preference deleted successfully");
+        return response;
+    }
+
     @PostMapping("/reset")
     public PreferencesResponse resetPreferences() {
-        try {
-            preferencesService.resetToDefaults();
-            Map<String, String> preferences = preferencesService.getAllPreferences();
-            
-            PreferencesResponse response = new PreferencesResponse();
-            response.setSuccess(true);
-            response.setMessage("Preferences reset to defaults");
-            response.setPreferences(preferences);
-            return response;
-            
-        } catch (Exception e) {
-            PreferencesResponse response = new PreferencesResponse();
-            response.setSuccess(false);
-            response.setError("Failed to reset preferences");
-            response.setMessage(e.getMessage());
-            return response;
-        }
+        preferencesService.resetToDefaults();
+        Map<String, String> preferences = preferencesService.getAllPreferences();
+        
+        PreferencesResponse response = new PreferencesResponse();
+        response.setSuccess(true);
+        response.setMessage("Preferences reset to defaults");
+        response.setPreferences(preferences);
+        return response;
     }
 
-    /**
-     * Initialize default preferences (useful for first run)
-     */
     @PostMapping("/initialize")
     public PreferencesResponse initializePreferences() {
-        try {
-            preferencesService.initializeDefaultPreferences();
-            Map<String, String> preferences = preferencesService.getAllPreferences();
-            
-            PreferencesResponse response = new PreferencesResponse();
-            response.setSuccess(true);
-            response.setMessage("Preferences initialized successfully");
-            response.setPreferences(preferences);
-            return response;
-            
-        } catch (Exception e) {
-            PreferencesResponse response = new PreferencesResponse();
-            response.setSuccess(false);
-            response.setError("Failed to initialize preferences");
-            response.setMessage(e.getMessage());
-            return response;
-        }
+        preferencesService.initializeDefaultPreferences();
+        Map<String, String> preferences = preferencesService.getAllPreferences();
+        
+        PreferencesResponse response = new PreferencesResponse();
+        response.setSuccess(true);
+        response.setMessage("Preferences initialized successfully");
+        response.setPreferences(preferences);
+        return response;
     }
-
 }
