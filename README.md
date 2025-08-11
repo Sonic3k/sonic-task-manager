@@ -18,6 +18,7 @@
 - [API Documentation](#-api-documentation)
 - [Architecture](#-architecture)
 - [Configuration](#-configuration)
+- [Roadmap](#-roadmap)
 - [Contributing](#-contributing)
 - [License](#-license)
 
@@ -393,6 +394,48 @@ export default defineConfig({
 })
 ```
 
+## 📈 Roadmap
+
+### **Phase 1: Complete Studio Interface** ⭐ *Current Focus*
+- [x] Core task management
+- [x] Focus algorithm
+- [x] Studio interface foundation
+- [x] Bulk operations
+- [ ] Detailed task editor with full metadata
+- [ ] Habit management interface with session tracking
+- [ ] Reminder management center
+- [ ] Advanced filtering & search
+- [ ] Task detail views
+- [ ] Progress visualization
+
+### **Phase 2: Brain Dump System** 💡 *Next Major Feature*
+- [ ] Quick capture interface ("What's on your mind?")
+- [ ] Unified collection for Ideas/Problems/Random thoughts
+- [ ] Smart categorization system
+- [ ] Transform engine: Ideas → Tasks, Problems → Solutions
+- [ ] Mobile-optimized capture
+
+### **Phase 3: Intelligence Layer** 🤖 *Smart Enhancements*
+- [ ] Weather integration for task suggestions
+- [ ] Calendar sync for optimal scheduling
+- [ ] AI problem analysis and suggestions
+- [ ] Smart task breakdown assistance
+- [ ] Time pattern recognition
+
+### **Phase 4: Advanced Analytics** 📊 *Optimization*
+- [ ] Focus effectiveness tracking
+- [ ] Enhanced focus algorithm
+- [ ] Habit success analytics
+- [ ] Personal productivity patterns
+- [ ] Gentle coaching system
+
+### **Phase 5: Platform Enhancement** 🚀 *Scaling*
+- [ ] Progressive Web App (PWA)
+- [ ] Calendar deep integration
+- [ ] Voice capture
+- [ ] Advanced automation
+- [ ] Custom themes and workflows
+
 ## 🤝 Contributing
 
 We welcome contributions! Please see our [Contributing Guide](CONTRIBUTING.md) for details.
@@ -410,20 +453,6 @@ We welcome contributions! Please see our [Contributing Guide](CONTRIBUTING.md) f
 - Update documentation for API changes
 - Use meaningful commit messages
 - Ensure code passes linting
-
-## 📈 Roadmap
-
-- [x] Core task management
-- [x] Focus algorithm
-- [x] Studio interface
-- [x] Bulk operations
-- [ ] Habit tracking with streaks
-- [ ] Focus analytics dashboard
-- [ ] Time blocking calendar
-- [ ] AI task suggestions
-- [ ] Mobile app (React Native)
-- [ ] Cloud sync support
-- [ ] Team collaboration features
 
 ## 📄 License
 
