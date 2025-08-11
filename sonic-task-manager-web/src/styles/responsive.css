@@ -1,0 +1,413 @@
+/* ========================================
+   Responsive Design Styles
+   File: src/styles/responsive.css
+   ======================================== */
+
+/* Tablet Layout (1024px and below) */
+@media (max-width: 1024px) {
+  .studio-layout {
+    grid-template-columns: 240px 1fr;
+  }
+  
+  .studio-page {
+    padding: var(--spacing-2xl);
+  }
+  
+  .page-title {
+    font-size: 24px;
+  }
+  
+  .workspace {
+    padding: var(--spacing-lg);
+  }
+}
+
+/* Mobile Layout (768px and below) */
+@media (max-width: 768px) {
+  /* Workspace Mobile */
+  .workspace {
+    padding: var(--spacing-lg);
+    gap: var(--spacing-2xl);
+  }
+
+  .workspace-header {
+    padding: var(--spacing-xl);
+  }
+
+  .header-main {
+    flex-direction: column;
+    gap: var(--spacing-lg);
+    text-align: center;
+  }
+
+  .stats-section {
+    justify-content: center;
+  }
+
+  .date-section .date {
+    font-size: 20px;
+  }
+
+  .task-card {
+    padding: var(--spacing-lg);
+  }
+
+  .task-card--focus {
+    padding: var(--spacing-xl);
+  }
+
+  .task-title {
+    font-size: 16px;
+  }
+
+  .task-card--focus .task-title {
+    font-size: 20px;
+  }
+
+  .task-actions {
+    flex-direction: column;
+  }
+
+  .action-btn {
+    justify-content: center;
+  }
+
+  .form-row {
+    grid-template-columns: 1fr;
+  }
+
+  .form-actions {
+    flex-direction: column;
+  }
+
+  .add-task-form {
+    margin: 0 var(--spacing-lg);
+    padding: var(--spacing-xl);
+  }
+
+  /* Studio Mobile */
+  .studio-layout {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto 1fr;
+  }
+  
+  .studio-sidebar {
+    position: static;
+    height: auto;
+    border-right: none;
+    border-bottom: 1px solid var(--color-bg-border);
+  }
+  
+  .studio-nav {
+    padding: var(--spacing-sm) 0;
+  }
+  
+  .nav-section {
+    margin-bottom: var(--spacing-lg);
+  }
+  
+  .studio-page {
+    padding: var(--spacing-lg);
+  }
+  
+  .studio-page-header {
+    flex-direction: column;
+    gap: var(--spacing-lg);
+  }
+  
+  .filter-row {
+    grid-template-columns: 1fr;
+  }
+  
+  .filter-checkboxes {
+    flex-direction: column;
+    gap: var(--spacing-lg);
+  }
+  
+  .bulk-actions {
+    flex-direction: column;
+    gap: var(--spacing-lg);
+    text-align: center;
+  }
+  
+  .studio-table-header {
+    flex-direction: column;
+    gap: var(--spacing-lg);
+  }
+  
+  .sort-controls {
+    flex-wrap: wrap;
+  }
+  
+  .studio-task-header {
+    flex-direction: column;
+    gap: var(--spacing-lg);
+  }
+  
+  .studio-task-meta {
+    align-items: flex-start;
+    min-width: auto;
+  }
+  
+  .studio-badges {
+    justify-content: flex-start;
+  }
+  
+  .pagination {
+    flex-direction: column;
+    gap: var(--spacing-lg);
+  }
+  
+  .page-numbers {
+    margin: 0;
+  }
+
+  /* Table row mobile adjustments */
+  .studio-task-row {
+    padding: var(--spacing-lg);
+  }
+
+  .studio-task-stats {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--spacing-xs);
+  }
+}
+
+/* Small Mobile (480px and below) */
+@media (max-width: 480px) {
+  :root {
+    --spacing-xs: 2px;
+    --spacing-sm: 4px;
+    --spacing-md: 8px;
+    --spacing-lg: 12px;
+    --spacing-xl: 16px;
+    --spacing-2xl: 20px;
+    --spacing-3xl: 24px;
+    --spacing-4xl: 32px;
+  }
+
+  .workspace {
+    padding: var(--spacing-md);
+    gap: var(--spacing-xl);
+  }
+
+  .section-title {
+    font-size: 18px;
+  }
+
+  .task-card {
+    padding: var(--spacing-md);
+  }
+
+  .task-card--focus {
+    padding: var(--spacing-lg);
+  }
+
+  .task-title {
+    font-size: 15px;
+  }
+
+  .task-card--focus .task-title {
+    font-size: 18px;
+  }
+
+  .add-task-form {
+    margin: 0 var(--spacing-sm);
+    padding: var(--spacing-lg);
+  }
+
+  .studio-page {
+    padding: var(--spacing-md);
+  }
+
+  .page-title {
+    font-size: 22px;
+  }
+
+  .studio-task-row {
+    flex-direction: column;
+    gap: var(--spacing-md);
+  }
+
+  .task-select {
+    order: 2;
+    padding-top: 0;
+  }
+
+  .task-content {
+    order: 1;
+  }
+
+  .studio-task-header {
+    gap: var(--spacing-md);
+  }
+
+  .bulk-actions-buttons {
+    flex-wrap: wrap;
+    gap: var(--spacing-sm);
+  }
+
+  .filter-panel {
+    padding: var(--spacing-lg);
+  }
+
+  .filter-panel-actions {
+    flex-direction: column;
+  }
+
+  .pagination-controls {
+    flex-wrap: wrap;
+    gap: var(--spacing-xs);
+  }
+}
+
+/* Landscape Mobile (height < 500px) */
+@media (max-height: 500px) and (orientation: landscape) {
+  .workspace-loading,
+  .workspace-error {
+    min-height: 70vh;
+    padding: var(--spacing-xl);
+  }
+
+  .empty-workspace {
+    padding: var(--spacing-3xl) var(--spacing-xl);
+  }
+
+  .studio-sidebar {
+    height: auto;
+    max-height: 100vh;
+  }
+
+  .studio-nav {
+    padding: var(--spacing-xs) 0;
+  }
+
+  .nav-section {
+    margin-bottom: var(--spacing-lg);
+  }
+}
+
+/* Print Styles */
+@media print {
+  .workspace,
+  .studio-page {
+    background: white !important;
+    color: black !important;
+    box-shadow: none !important;
+  }
+
+  .workspace-header,
+  .task-card {
+    background: white !important;
+    border: 1px solid #ddd !important;
+    box-shadow: none !important;
+  }
+
+  .add-task-section,
+  .studio-access,
+  .task-actions,
+  .studio-task-actions,
+  .bulk-actions,
+  .filter-panel,
+  .pagination,
+  .studio-sidebar {
+    display: none !important;
+  }
+
+  .studio-layout {
+    grid-template-columns: 1fr !important;
+  }
+
+  .task-card {
+    break-inside: avoid;
+    margin-bottom: var(--spacing-lg) !important;
+  }
+
+  .page-title {
+    color: black !important;
+  }
+}
+
+/* High DPI / Retina Displays */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+  .loading-spinner .spinner {
+    border-width: 2px;
+  }
+
+  .progress-bar {
+    height: 4px;
+  }
+
+  .studio-progress .progress-bar {
+    height: 3px;
+  }
+}
+
+/* Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  .loading-spinner .spinner {
+    animation: none;
+    border-top-color: var(--color-primary);
+  }
+}
+
+/* Dark Mode Support (if needed in future) */
+@media (prefers-color-scheme: dark) {
+  /* Future dark mode variables can be added here */
+  /*
+  :root {
+    --color-bg-primary: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 30%, #3a3a3a 100%);
+    --color-text-primary: #ffffff;
+    --color-text-secondary: #b0b0b0;
+    --color-bg-white: #2d2d2d;
+    --color-bg-glass: rgba(45, 45, 45, 0.8);
+    --color-bg-light: #3a3a3a;
+    --color-bg-border: rgba(255, 255, 255, 0.1);
+  }
+  */
+}
+
+/* Focus Indicators for Accessibility */
+@media (prefers-reduced-motion: no-preference) {
+  .btn:focus-visible,
+  .nav-link:focus-visible,
+  .studio-action-btn:focus-visible,
+  .pagination-btn:focus-visible,
+  input:focus-visible,
+  textarea:focus-visible,
+  select:focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+  }
+}
+
+/* Large Desktop (1400px and above) */
+@media (min-width: 1400px) {
+  .studio-layout {
+    grid-template-columns: 320px 1fr;
+  }
+  
+  .workspace {
+    max-width: 900px;
+  }
+  
+  .studio-page {
+    padding: var(--spacing-4xl);
+  }
+  
+  .task-card--focus {
+    padding: var(--spacing-3xl);
+  }
+  
+  .page-title {
+    font-size: 32px;
+  }
+}

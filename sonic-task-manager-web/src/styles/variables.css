@@ -1,0 +1,174 @@
+/* ========================================
+   CSS Variables & Base Styles
+   File: src/styles/variables.css
+   ======================================== */
+
+:root {
+  /* Colors */
+  --color-primary: #6c5ce7;
+  --color-primary-light: #a29bfe;
+  --color-primary-dark: #5a4fcf;
+  --color-success: #00b894;
+  --color-success-dark: #00a085;
+  --color-warning: #ffd93d;
+  --color-error: #e74c3c;
+  --color-info: #1a73e8;
+  
+  /* Text Colors */
+  --color-text-primary: #2c1810;
+  --color-text-secondary: #636e72;
+  --color-text-muted: #999;
+  
+  /* Background Colors */
+  --color-bg-primary: linear-gradient(135deg, #fdf6e3 0%, #f4f1de 30%, #e8dcc6 100%);
+  --color-bg-white: #ffffff;
+  --color-bg-glass: rgba(255, 255, 255, 0.8);
+  --color-bg-light: #f8f9fa;
+  --color-bg-border: rgba(0, 0, 0, 0.08);
+  
+  /* Priority Colors */
+  --color-priority-high: #e74c3c;
+  --color-priority-medium: #ffd93d;
+  --color-priority-low: #00b894;
+  
+  /* Urgency Colors */
+  --color-urgent: #e17055;
+  --color-overdue: #e74c3c;
+  
+  /* Spacing */
+  --spacing-xs: 4px;
+  --spacing-sm: 8px;
+  --spacing-md: 12px;
+  --spacing-lg: 16px;
+  --spacing-xl: 20px;
+  --spacing-2xl: 24px;
+  --spacing-3xl: 32px;
+  --spacing-4xl: 48px;
+  
+  /* Border Radius */
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-xl: 16px;
+  
+  /* Shadows */
+  --shadow-sm: 0 2px 10px rgba(0,0,0,0.06);
+  --shadow-md: 0 4px 20px rgba(0,0,0,0.08);
+  --shadow-lg: 0 6px 25px rgba(0,0,0,0.1);
+  --shadow-xl: 0 8px 30px rgba(0,0,0,0.12);
+  
+  /* Transitions */
+  --transition-fast: 0.2s ease;
+  --transition-normal: 0.3s ease;
+  
+  /* Z-indexes */
+  --z-dropdown: 100;
+  --z-modal: 1000;
+  --z-tooltip: 2000;
+}
+
+/* Reset & Base */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  background: var(--color-bg-primary);
+  color: var(--color-text-primary);
+  line-height: 1.5;
+  min-height: 100vh;
+}
+
+/* Utility Classes */
+.btn {
+  padding: var(--spacing-lg) var(--spacing-2xl);
+  border: none;
+  border-radius: var(--radius-md);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition-fast);
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+}
+
+.btn--primary {
+  background: var(--color-primary);
+  color: white;
+}
+
+.btn--primary:hover {
+  background: var(--color-primary-dark);
+  transform: translateY(-1px);
+}
+
+.btn--secondary {
+  background: var(--color-bg-light);
+  color: var(--color-text-secondary);
+  border: 1px solid var(--color-bg-border);
+}
+
+.btn--secondary:hover {
+  background: #e8eaed;
+}
+
+.btn--success {
+  background: var(--color-success);
+  color: white;
+}
+
+.btn--warning {
+  background: var(--color-warning);
+  color: var(--color-text-primary);
+}
+
+.btn--danger {
+  background: var(--color-error);
+  color: white;
+}
+
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none !important;
+}
+
+/* Loading & Error States */
+.loading-spinner .spinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid #e0e0e0;
+  border-top: 3px solid var(--color-primary);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+/* Form Elements */
+input, textarea, select {
+  padding: var(--spacing-lg);
+  border: 1px solid #ddd;
+  border-radius: var(--radius-md);
+  font-size: 14px;
+  transition: var(--transition-fast);
+  font-family: inherit;
+}
+
+input:focus, textarea:focus, select:focus {
+  outline: none;
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px rgba(108, 92, 231, 0.1);
+}
