@@ -19,7 +19,9 @@ const TaskCard = ({ task, variant = 'default', showDetails = false }) => {
     const urgencyClass = task.isOverdue ? 'task-card--overdue' : 
                         task.isUrgent ? 'task-card--urgent' : '';
     
-    return `${baseClass} ${variantClass} ${processingClass} ${urgencyClass}`.trim();
+    const statusClass = variant === 'studio' ? `task-card--status-${task.status}` : '';
+    
+    return `${baseClass} ${variantClass} ${processingClass} ${urgencyClass} ${statusClass}`.trim();
   };
 
   // Get priority indicator

@@ -753,3 +753,19 @@
 .coming-soon li {
   margin-bottom: var(--spacing-sm);
 }
+.task-card--status-done {
+  opacity: 0.6;
+}
+
+.task-card--status-done .studio-task-title {
+  text-decoration: line-through;
+  color: #999;
+}
+
+.task-card--status-done .studio-task-actions {
+  display: none;
+}
+
+.task-card--status-snoozed {
+  opacity: 0.5;
+}
