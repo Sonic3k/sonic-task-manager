@@ -114,7 +114,7 @@ Moods: `intense` → `busy` → `active` → `steady` → `chill` → `relaxed`
 | Vite | 6.3.5 | Build tool |
 | React Router | 6.20 | Routing |
 | Axios | 1.6.0 | HTTP client |
-| CSS3 | - | Styling |
+| CSS3 | - | Modular styling with variables |
 
 ## 🚀 Getting Started
 
@@ -219,7 +219,11 @@ sonic-task-manager/
 │   │   │   └── useWorkspace.jsx        # State management
 │   │   │
 │   │   └── 🎨 styles/                  # CSS
-│   │       └── index.css
+│   │       ├── index.css               # Main import file
+│   │       ├── variables.css           # CSS variables & utilities
+│   │       ├── workspace.css           # Workspace interface
+│   │       ├── studio.css              # Studio interface
+│   │       └── responsive.css          # Mobile-first responsive
 │   │
 │   ├── package.json                    # NPM config
 │   └── vite.config.js                  # Vite config
