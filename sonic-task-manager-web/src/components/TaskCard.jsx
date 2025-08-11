@@ -84,10 +84,12 @@ const TaskCard = ({ task, variant = 'default', showDetails = false }) => {
         <div className="studio-task-header">
           <div className="studio-task-main">
             <div className="studio-task-title-row">
-              <span className="priority-icon">{getPriorityIcon()}</span>
-              <h4 className="studio-task-title">{task.title}</h4>
-              {isProcessing && <span className="processing-indicator">⏳</span>}
-            </div>
+  <span className="priority-icon">{getPriorityIcon()}</span>
+  <h4 className="studio-task-title">{task.title}</h4>
+  {isProcessing && <span className="processing-indicator">⏳</span>}
+  {variant === 'studio' && task.status === 'done' && <span className="status-badge">✓</span>}
+  {variant === 'studio' && task.status === 'snoozed' && <span className="status-badge">💤</span>}
+</div>
             
             {task.description && (
               <p className="studio-task-description">{task.description}</p>
